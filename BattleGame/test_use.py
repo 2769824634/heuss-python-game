@@ -5,7 +5,7 @@ import constants
 import characters
 # from characters import Unit
 from Logger import LogWriter
-##########点击攻击之前和user_interface.py一样，就是这个UI代码点击攻击之后死机了，说是Unit.__init__()缺少defence这个数据，真懵逼了，和我之前的猜想一样，这个UI从一开始就没能从其他数据库里面提取到相应资料，完全就是个空壳子，我嘎了。
+##########点击攻击之前和user_interface.py一样，就是这个UI代码点击攻击之后死机了，说是'str' object has no attribute 'attack'，真懵逼了，至少说明已经能拉去其他文件的资料了，目前看代码，能确定的问题就是在创建完角色之后，‘职业’只是文本，并没有携带characters中的类以及它的数据，如果能把这个问题解决，感觉思路会通畅许多。
 FRONTEND_UNIT_TYPES = {
     "Warrior": constants.UnitType.Warrior,
     "Tanker": constants.UnitType.Tanker
@@ -18,7 +18,7 @@ def show_main_window(player_team_info, ai_team_info):
     player_team_var = tk.StringVar(main_window)
     ai_team_var = tk.StringVar(main_window)
 
-    # 显示玩家队伍成员
+     # 显示玩家队伍成员
     player_team_var.set(None)
     for i, (name, unit_type) in enumerate(player_team_info):
         text = f"{name} ({unit_type})"
@@ -35,7 +35,7 @@ def show_main_window(player_team_info, ai_team_info):
     attack_button.grid(row=len(player_team_info) // 2, column=2, padx=5, pady=5)
     
 
-    # 主循环
+     # 主循环
     main_window.mainloop()
 
 def on_finish_button_click(root):
@@ -44,14 +44,14 @@ def on_finish_button_click(root):
         if not entry_names[i].get():
             messagebox.showerror("错误", "请为每个队员选择名称和职业")
             return
-    
+
     # 收集用户队伍信息
     user_team_info = []
     for i in range(3):
         name = entry_names[i].get()
         unit_type = selected_classes[i].get()  # 获取用户选择的职业
         user_team_info.append((name, unit_type))
-        
+
     processed_team = []
     for name, unit_type in user_team_info:
         unit = characters.get_unit(name, FRONTEND_UNIT_TYPES[unit_type])
@@ -67,7 +67,7 @@ def on_finish_button_click(root):
 
     # 跳转到主界面并传递处理后的队伍信息
     show_main_window(processed_team, ai_team_info)
-    root.destroy()  # 销毁主窗口
+    root.destroy() # 销毁主窗口
 
 root = tk.Tk()
 root.title("选择队伍")
@@ -84,7 +84,7 @@ for i in range(3):
     entry_name.grid(row=i, column=1, padx=5, pady=5)
     entry_names.append(entry_name)
 
-    class_var = tk.StringVar(value='Warrior')  
+    class_var = tk.StringVar(value='Warrior') 
     selected_class = tk.OptionMenu(root, class_var, 'Warrior', 'Tanker')
     selected_class.grid(row=i, column=2, padx=5, pady=5)
     selected_classes.append(class_var)

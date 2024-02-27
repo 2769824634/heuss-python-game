@@ -4,7 +4,7 @@ import random
 import constants
 import characters
 
-######## 以奇怪方式陷入了死循环，角色创建好后，按攻击键屁用没有，应该是在创建角色的时候没能成功从characters.py中调取到真正的信息（也就是说，这破玩意是个空壳，最终还是没有连上接口。
+######## 以奇怪方式陷入了死循环，角色创建好后，按攻击键屁用没有，（这破玩意是个空壳，最终还是没有连上接口，无能狂怒中）。
 FRONTEND_UNIT_TYPES = {
     "Warrior": constants.UnitType.Warrior,
     "Tanker": constants.UnitType.Tanker
