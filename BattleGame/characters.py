@@ -111,7 +111,7 @@ class Warrior(Unit):
 
 
 class Tanker(Unit):
-    def __init__(self, name, attack: int, defence: int):
+    def __init__(self, name, attack: int = 0, defence: int = 0):
         attack = random.randint(constants.TankerAttackLowerLimit, constants.TankerAttackUpperLimit) \
             if not (constants.TankerAttackLowerLimit <= attack <= constants.TankerAttackUpperLimit) \
             else attack
@@ -119,3 +119,10 @@ class Tanker(Unit):
             if not (constants.TankerDefenceLowerLimit <= defence <= constants.TankerDefenceUpperLimit) \
             else defence
         super().__init__(name, attack, defence)
+
+
+def get_unit(unit_type: constants.UnitType, name: str) -> Unit:
+    if unit_type == constants.UnitType.Warrior:
+        return Warrior(name)
+    else:
+        return Tanker(name)

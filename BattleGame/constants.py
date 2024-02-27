@@ -1,5 +1,11 @@
 from enum import Enum
 
+
+class UnitType(Enum):
+    Warrior = 1
+    Tanker = 2
+
+
 WarriorAttackLowerLimit: int = 5
 WarriorAttackUpperLimit: int = 20
 WarriorDefenceLowerLimit: int = 1
