@@ -23,7 +23,7 @@ class _EventLogHandler:
     log_file: TextIO
 
     def __init__(self):
-        log_file_name: str = datetime.now().strftime("%m-%d-%Y-%H-%M-%S") + ".log"
+        log_file_name: str = datetime.now().strftime("%m-%d-%Y-%H-%M-%S") + ".log" #？？
         self.log_file = codecs.open(log_file_name, mode='a', encoding='utf-8')
 
     def __del__(self):
@@ -53,3 +53,4 @@ class LogWriter:
 
     def retrieve(self) -> str:
         return self.game_message_handler.retrieve()
+    
