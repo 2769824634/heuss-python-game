@@ -1,7 +1,7 @@
 import random
 from random import randint
 import constants
-from logger import LogWriter
+from Logger import LogWriter 
 
 
 def _get_damage_flag(damage: int) -> constants.AttackFlag:
