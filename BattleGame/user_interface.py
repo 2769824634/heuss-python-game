@@ -1,236 +1,73 @@
-import constants
-from typing import TextIO
-from datetime import datetime
-import codecs
-from pathlib import Path
-from enum import Enum
+import tkinter as tk
+from tkinter import messagebox
+import characters
 import random
-from random import randint
 import constants
-from Logger import LogWriter 
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+
+def show_main_window(team_info):
+    # 这里是跳转到主界面的操作
+    print("跳转到主界面，队伍信息：", team_info)
+
+def on_finish_button_click():
+    # 检查是否每个队员都已经填写了信息
+    for i in range(3):
+        if not entry_names[i].get():
+            messagebox.showerror("错误", "请为每个队员选择名称和职业")
+            return
+    
+    # 收集用户队伍信息
+    user_team_info = []
+    for i in range(3):
+        name = entry_names[i].get()
+        user_team_info.append((name))
+    
+    ai_team_info = []
+    for i in range(3):
+        ai_name = f"AI_Player_{i+1}"
+        unit_type = random.choice([constants.UnitType.Warrior, constants.UnitType.Tanker])
+        ai_team_info.append((ai_name, unit_type))
+    
+
+    processed_team = [
+        characters.get_unit(unit_type, name) \
+        for name, unit_type \
+        in zip(entry_names, selected_classes)\
+    ]
+    
+    # 跳转到主界面并传递处理后的队伍信息
+    show_main_window(processed_team)
+    show_main_window(ai_team_info)
+    root.destroy()
 
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\YS\heuss-python-game\BattleGame\build\assets\frame0")
+root = tk.Tk()
+root.title("选择队伍")
+
+# 创建队员信息输入框和职业选项
+entry_names = []
+selected_classes = []
+for i in range(3):
+    label = tk.Label(root, text=f"队员{i+1}：")
+    label.grid(row=i, column=0, padx=5, pady=5)
+
+    entry_name = tk.Entry(root)
+    entry_name.grid(row=i, column=1, padx=5, pady=5)
+    entry_names.append(entry_name)
+
+    class_var = tk.StringVar()
+    class_var.set('Warrior')  # 默认选中战士
+    selected_class = tk.OptionMenu(root, class_var, "Warrior", "Tanker")
+    selected_class.grid(row=i, column=2, padx=5, pady=5)
+    selected_classes.append(class_var)
+
+selected_classes = [
+    constants.UnitType.Warrior if class_var == 'Warrior' else constants.UnitType.Tanker for unit_type in selected_classes
+]
 
 
-def relative_to_assets(path: str) -> Path:
-    return ASSETS_PATH / Path(path)
+# 创建完成按钮
+finish_button = tk.Button(root, text="完成", command=on_finish_button_click)
+finish_button.grid(row=3, columnspan=3, padx=5, pady=10)
 
+root.mainloop()
 
-window = Tk()
-
-window.geometry("949x691")
-window.configure(bg = "#FFFFFF")
-
-
-canvas = Canvas(
-    window,
-    bg = "#FFFFFF",
-    height = 691,
-    width = 949,
-    bd = 0,
-    highlightthickness = 0,
-    relief = "ridge"
-)
-
-canvas.place(x = 0, y = 0)
-image_image_1 = PhotoImage(
-    file=relative_to_assets("image_1.png"))
-image_1 = canvas.create_image(
-    474.0,
-    46.666656494140625,
-    image=image_image_1
-)
-
-image_image_2 = PhotoImage(
-    file=relative_to_assets("image_2.png"))
-image_2 = canvas.create_image(
-    761.7266845703125,
-    392.9966735839844,
-    image=image_image_2
-)
-
-canvas.create_text(
-    596.0,
-    105.0,
-    anchor="nw",
-    text= 'log part',
-    fill="#000000",
-    font=("Inter Thin", 15 * -1)
-)
-
-button_image_1 = PhotoImage(
-    file=relative_to_assets("button_1.png"))
-button_1 = Button(
-    image=button_image_1,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_1 clicked"),
-    relief="flat"
-)
-button_1.place(
-    x=241.0,
-    y=566.0,
-    width=90.15499877929688,
-    height=38.02333450317383
-)
-
-button_image_2 = PhotoImage(
-    file=relative_to_assets("button_2.png"))
-button_2 = Button(
-    image=button_image_2,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_2 clicked"),
-    relief="flat"
-)
-button_2.place(
-    x=331.0,
-    y=142.0,
-    width=232.0,
-    height=76.11428833007812
-)
-
-button_image_3 = PhotoImage(
-    file=relative_to_assets("button_3.png"))
-button_3 = Button(
-    image=button_image_3,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_3 clicked"),
-    relief="flat"
-)
-button_3.place(
-    x=331.0,
-    y=270.44287109375,
-    width=232.0,
-    height=76.11428833007812
-)
-
-button_image_4 = PhotoImage(
-    file=relative_to_assets("button_4.png"))
-button_4 = Button(
-    image=button_image_4,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_4 clicked"),
-    relief="flat"
-)
-button_4.place(
-    x=331.0,
-    y=399.0,
-    width=232.0,
-    height=76.11428833007812
-)
-
-button_image_5 = PhotoImage(
-    file=relative_to_assets("button_5.png"))
-button_5 = Button(
-    image=button_image_5,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_5 clicked"),
-    relief="flat"
-)
-button_5.place(
-    x=16.0,
-    y=142.16693115234375,
-    width=225.0,
-    height=76.07613372802734
-)
-
-button_image_6 = PhotoImage(
-    file=relative_to_assets("button_6.png"))
-button_6 = Button(
-    image=button_image_6,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_6 clicked"),
-    relief="flat"
-)
-button_6.place(
-    x=16.0,
-    y=270.54541015625,
-    width=225.0,
-    height=76.07613372802734
-)
-
-button_image_7 = PhotoImage(
-    file=relative_to_assets("button_7.png"))
-button_7 = Button(
-    image=button_image_7,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_7 clicked"),
-    relief="flat"
-)
-button_7.place(
-    x=16.0,
-    y=398.9238586425781,
-    width=225.0,
-    height=76.07613372802734
-)
-
-entry_image_1 = PhotoImage(
-    file=relative_to_assets("entry_1.png"))
-entry_bg_1 = canvas.create_image(
-    128.5,
-    371.5,
-    image=entry_image_1
-)
-entry_1 = Entry(
-    bd=0,
-    bg="#FFFFFF",
-    fg="#000716",
-    highlightthickness=0
-)
-entry_1.place(
-    x=56.0,
-    y=359.0,
-    width=145.0,
-    height=23.0
-)
-
-entry_image_2 = PhotoImage(
-    file=relative_to_assets("entry_2.png"))
-entry_bg_2 = canvas.create_image(
-    128.5,
-    116.5,
-    image=entry_image_2
-)
-entry_2 = Entry(
-    bd=0,
-    bg="#FFFFFF",
-    fg="#000716",
-    highlightthickness=0
-)
-entry_2.place(
-    x=56.0,
-    y=105.0,
-    width=145.0,
-    height=21.0
-)
-
-entry_image_3 = PhotoImage(
-    file=relative_to_assets("entry_3.png"))
-entry_bg_3 = canvas.create_image(
-    128.5,
-    244.0,
-    image=entry_image_3
-)
-entry_3 = Entry(
-    bd=0,
-    bg="#FFFFFF",
-    fg="#000716",
-    highlightthickness=0
-)
-entry_3.place(
-    x=56.0,
-    y=233.0,
-    width=145.0,
-    height=20.0
-)
-window.resizable(False, False)
-window.mainloop()
