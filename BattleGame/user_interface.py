@@ -29,14 +29,14 @@ def on_finish_button_click():
     
 
     processed_team = [
-        characters.get_unit(unit_type, name) \
-        for name, unit_type \
+        characters.get_unit(name, unit_type) \
+        for name, unit_type\
         in zip(entry_names, selected_classes)\
     ]
     
+    ALL_team = processed_team + ai_team_info
     # 跳转到主界面并传递处理后的队伍信息
-    show_main_window(processed_team)
-    show_main_window(ai_team_info)
+    show_main_window(ALL_team)
     root.destroy()
 
 
@@ -44,24 +44,29 @@ root = tk.Tk()
 root.title("选择队伍")
 
 # 创建队员信息输入框和职业选项
+
 entry_names = []
 selected_classes = []
 for i in range(3):
-    label = tk.Label(root, text=f"队员{i+1}：")
+    label = tk.Label(root, text=f"队员{i+1}: ")
     label.grid(row=i, column=0, padx=5, pady=5)
 
     entry_name = tk.Entry(root)
     entry_name.grid(row=i, column=1, padx=5, pady=5)
     entry_names.append(entry_name)
 
+    
     class_var = tk.StringVar()
     class_var.set('Warrior')  # 默认选中战士
-    selected_class = tk.OptionMenu(root, class_var, "Warrior", "Tanker")
+    selected_class = tk.OptionMenu(root, class_var, 'Warrior', 'Tanker')
     selected_class.grid(row=i, column=2, padx=5, pady=5)
     selected_classes.append(class_var)
-
+    
+    
+    
 selected_classes = [
-    constants.UnitType.Warrior if class_var == 'Warrior' else constants.UnitType.Tanker for unit_type in selected_classes
+    constants.UnitType.Warrior if class_var.get() == "Warrior" else constants.UnitType.Tanker
+    for class_var in selected_classes
 ]
 
 

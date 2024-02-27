@@ -121,7 +121,7 @@ class Tanker(Unit):
         super().__init__(name, attack, defence)
 
 
-def get_unit(unit_type: constants.UnitType, name: str) -> Unit:
+def get_unit(name: str, unit_type: constants.UnitType) -> Unit:
     if unit_type == constants.UnitType.Warrior:
         return Warrior(name)
     else:
