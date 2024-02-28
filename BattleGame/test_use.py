@@ -30,8 +30,9 @@ def show_main_window(player_team_info, ai_team_info):
         text = f"{name} ({unit_type})"
         tk.Radiobutton(main_window, text=text, variable=ai_team_var, value=name).grid(row=i, column=1, padx=5, pady=5)
 
+
     # 创建攻击按钮
-    attack_button = tk.Button(main_window, text="攻击", command=lambda: characters.Unit.attack(player_team_var.get(), ai_team_var.get())) #蒙蔽了
+    attack_button = tk.Button(main_window, text="攻击", command=lambda: constants.UnitType(characters.Unit(), characters.Unit())) #调用不正确
     attack_button.grid(row=len(player_team_info) // 2, column=2, padx=5, pady=5)
     
 
@@ -55,18 +56,19 @@ def on_finish_button_click(root):
     processed_team = []
     for name, unit_type in user_team_info:
         unit = characters.get_unit(name, FRONTEND_UNIT_TYPES[unit_type])
-        processed_team.append((unit.name, unit_type))
+        processed_team.append((unit.name, characters.get_unit(entry_name, unit_type)))
 
-    # 随机生成AI队伍信息
-    ai_team_info = []
-    for i in range(3):
-        ai_name = f"AI_Player_{i+1}"
-        ai_unit_type = random.choice(["Warrior", 'Tanker'])
+    # 处理AI队伍信息
+    processed_ai_team = []
+    for a in range(3):
+        ai_name = f"AI_Player_{a+1}"
+        ai_unit_type = random.choice(["Warrior", 'Tanker'])  # 随机选择单位类型
         unit = characters.get_unit(ai_name, FRONTEND_UNIT_TYPES[ai_unit_type])
-        ai_team_info.append((unit.name, ai_unit_type))
+        processed_ai_team.append((characters.get_unit(unit.name, ai_unit_type)))
+
 
     # 跳转到主界面并传递处理后的队伍信息
-    show_main_window(processed_team, ai_team_info)
+    show_main_window(processed_team, processed_ai_team)
     root.destroy() # 销毁主窗口
 
 root = tk.Tk()
