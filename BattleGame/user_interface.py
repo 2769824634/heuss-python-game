@@ -30,7 +30,7 @@ def show_main_window(player_team_info, ai_team_info):
         tk.Radiobutton(main_window, text=name, variable=ai_team_var, value=name).grid(row=i, column=1, padx=5, pady=5)
 
     # 创建攻击按钮
-    attack_button = tk.Button(main_window, text="攻击", command=lambda: characters.Unit.attack)
+    attack_button = tk.Button(main_window, text="攻击", command=lambda: characters.Unit.attack(player_team_var.get(), ai_team_var.get()))
     attack_button.grid(row=len(player_team_info) // 2, column=2, padx=5, pady=5)
 
     # 主循环

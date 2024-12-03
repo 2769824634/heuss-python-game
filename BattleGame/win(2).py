@@ -1,8 +1,38 @@
-import characters
-import constants
-import random
 import tkinter as tk
+import random
 
+class Unit:
+    def __init__(self, name, profession, hp, atk, defense, exp=0, rank=1):
+        self.name = name
+        self.profession = profession
+        self.hp = hp
+        self.atk = atk
+        self.defense = defense
+        self.exp = exp
+        self.rank = rank
+
+        self.attack_message = ""
+        self.level_up_message = ""
+
+    def attack(self, target: "Unit"):
+        damage = max(0, self.atk - target.defense + random.randint(-5, 5))
+        target.hp = max(0, target.hp - damage)
+        self.exp += damage
+
+        self.attack_message = f"{self.name} attacked {target.name} and caused {damage} damage."
+
+        if target.hp == 0:
+            self.attack_message += f"\n{target.name} has been defeated!"
+
+        self.check_level_up()
+
+    def check_level_up(self):
+        if self.exp >= 100:
+            self.exp -= 100
+            self.rank += 1
+            self.atk += random.randint(1, 5)
+            self.defense += random.randint(1, 5)
+            self.level_up_message = f"{self.name} leveled up! Now at rank {self.rank}."
 
 class BattleGameUI:
     def __init__(self, root, player_units, ai_units):
@@ -103,15 +133,15 @@ class BattleGameUI:
 
 def setup_game():
     player_units = [
-        characters.Unit("Player Warrior 1", "Warrior", random.randint(5, 20), random.randint(1, 10)),
-        characters.Unit("Player Warrior 2", "Warrior", random.randint(5, 20), random.randint(1, 10)),
-        characters.Unit("Player Tanker", "Tanker", random.randint(1, 10), random.randint(5, 15))
+        Unit("Player Warrior 1", "Warrior", 100, random.randint(5, 20), random.randint(1, 10)),
+        Unit("Player Warrior 2", "Warrior", 100, random.randint(5, 20), random.randint(1, 10)),
+        Unit("Player Tanker", "Tanker", 100, random.randint(1, 10), random.randint(5, 15))
     ]
 
     ai_units = [
-        characters.Unit("AI Warrior 1", "Warrior", 100, random.randint(5, 20), random.randint(1, 10)),
-        characters.Unit("AI Warrior 2", "Warrior", 100, random.randint(5, 20), random.randint(1, 10)),
-        characters.Unit("AI Tanker", "Tanker", 100, random.randint(1, 10), random.randint(5, 15))
+        Unit("AI Warrior 1", "Warrior", 100, random.randint(5, 20), random.randint(1, 10)),
+        Unit("AI Warrior 2", "Warrior", 100, random.randint(5, 20), random.randint(1, 10)),
+        Unit("AI Tanker", "Tanker", 100, random.randint(1, 10), random.randint(5, 15))
     ]
 
     return player_units, ai_units
